@@ -7,17 +7,30 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
+    scene.update();
+
 
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    scene.draw();
 
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+    switch(key) {
+        case 't':
+            break;
+        case 's':
+            scene.toggleStatus();
+            break;
+        case 'f':
+            fullScreenFlag = !fullScreenFlag;
+            ofSetFullscreen(fullScreenFlag);
+            break;
+    }
 }
 
 //--------------------------------------------------------------

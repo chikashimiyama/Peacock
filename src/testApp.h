@@ -1,8 +1,12 @@
 #pragma once
 
 #include "ofMain.h"
+#include "PckScene.h"
 
 class testApp : public ofBaseApp{
+
+    PckScene scene;
+    bool fullScreenFlag, statusFlag;
 
 	public:
 		void setup();
