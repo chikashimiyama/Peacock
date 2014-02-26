@@ -18,47 +18,46 @@ class PckVisualizer{
 
 private:
     PckRecognizer* recognizer;
-    
+
     ofColor bgColor;
     ofColor gridColor;
     ofColor gridLineColor;
-    
+
     ofEasyCam camera;
-    
-    
+
+
     ofFloatColor sensorColor[NUM_ROWS][NUM_COLUMNS];
     ofVec3f sensorPosition[NUM_ROWS][NUM_COLUMNS];
-    
+
     ofVec3f gridLineData[NUM_GRID_LINES][2];
-    
+
     ofFloatColor thresholdPlaneColor[4];
     ofVec3f thresholdPlaneData[4];
-    
+
     ofVbo sensorVbo, gridLineVbo;
     ofVbo thresholdPlaneVbo;
-    
+
     void sensorSetup();
     void gridLineSetup();
     void thresholdPlaneSetup();
     bool statusFlag;
-    
-    void vertexUpdate(float *matrix);
-    
-    
+
+    void vertexUpdate(unsigned char *matrix);
+
+
     // gui
     ofxPanel dataPanel;
-    ofxSlider<int> sumSlider;
-    
+
 public:
     PckVisualizer();
     ~PckVisualizer();
-    
+
     inline void setRecognizer(PckRecognizer *recog);
-    void update(float *matrix);
+    void update(unsigned char *matrix);
 
     void draw();
     void toggleStatus();
-    
+
 };
 
 

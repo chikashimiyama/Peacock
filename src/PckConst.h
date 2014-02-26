@@ -9,6 +9,9 @@
 #ifndef Peacock_PckConst_h
 #define Peacock_PckConst_h
 
+#define ATMEL_VENDOR_ID 0x03eb
+#define MY_PRODUCT_ID 0x204f
+
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480
 
@@ -38,8 +41,8 @@ enum PCKDetection{
 enum PCKDrawMode{
     PCK_DRAWMODE_3D,
     PCK_DRAWMODE_HISTORY
-    
-    
+
+
 };
 
 #endif
