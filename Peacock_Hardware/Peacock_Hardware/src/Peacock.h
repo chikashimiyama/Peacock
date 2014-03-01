@@ -17,9 +17,8 @@
 #include <LUFA/Drivers/USB/USB.h>
 #include <LUFA/Platform/Platform.h>
 
-
-
-
+#include "lcd.h"
+#include "spi.h"
 
 void SetupHardware(void);
 void sendMessage(void);	
