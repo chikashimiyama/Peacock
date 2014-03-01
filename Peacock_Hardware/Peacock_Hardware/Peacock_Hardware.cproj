@@ -307,12 +307,6 @@
     <Compile Include="src\Peacock.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\spi.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\spi.h">
-      <SubType>compile</SubType>
-    </Compile>
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
