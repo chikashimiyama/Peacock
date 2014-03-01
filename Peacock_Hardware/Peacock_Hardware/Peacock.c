@@ -52,8 +52,13 @@ void SetupHardware(void)
 
 void sendMessage(void)
 {
-	char* ReportString = "test"; 
-	CDC_Device_SendString(&VirtualSerial_CDC_Interface, ReportString);
+	unsigned char data[4];
+	data[0] = 100;
+	data[1] = 50;
+	data[2] = 30;
+	data[3] = 200; 
+	_delay_ms(25);
+	CDC_Device_SendData(&VirtualSerial_CDC_Interface, (void*)data, 4);
 }
 
 void EVENT_USB_Device_Connect(void)
