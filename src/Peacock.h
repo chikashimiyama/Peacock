@@ -2,10 +2,10 @@
 
 #include "PckConst.h"
 #include "ofMain.h"
-#include "libusb.h"
 #include "PckVisualizer.h"
 #include "PckSynthesizer.h"
 #include "PckRecognizer.h"
+#include "PckReceiver.h"
 
 class Peacock : public ofBaseApp{
 
@@ -16,29 +16,13 @@ class Peacock : public ofBaseApp{
     PckVisualizer visualizer; /**< an instance of visualizer */
     PckRecognizer recognizer; /**< an instance of data recognizer */
     PckSynthesizer synthesizer; /**< an instance of synthesizer */
+    PckReceiver receiver;
 
-    /*!
-    @{
-        @name libusb
-    */
-    libusb_context *ctx;
-    libusb_device **list;
-    libusb_device *peacock; /**< pointer to peacock */
-    libusb_device_handle *handle; /**< usb interface handler */
-    /*!
-    @}
-    */
     bool forwarding; /**< OSC forwarding flag */
     bool detached;
 
-	public:
+public:
     ~Peacock();
-
-    /*! attempts to open USB Port, return false if fails */
-    bool openUSBPort(void);
-
-    /*! close the connection to the peacock hardware*/
-    void closeUSBPort(void);
 
     /*! get newinfo from the device if any and notify the update
     to the sound engin*/
@@ -48,7 +32,6 @@ class Peacock : public ofBaseApp{
     void toggleStatus(void);
 
     void setup();
-
 
     void keyPressed(int key);
     void keyReleased(int key);
