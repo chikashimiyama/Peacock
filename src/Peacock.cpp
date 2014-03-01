@@ -1,6 +1,6 @@
 #include "Peacock.h"
 #include "libusb.h"
-
+#include <sstream>
 
 Peacock::~Peacock(){
     closeUSBPort();
@@ -106,16 +106,27 @@ void Peacock::update(void){
     int nTimeout = 100;	//in milliseconds
     int BytesWritten = 0;
     int i;
-    unsigned char bufs[37];
+    unsigned char bufs[8];
+    std::ostringstream os;
 
-    libusb_interrupt_transfer( handle, 0x81, bufs, 36, &BytesWritten, nTimeout);
+    libusb_interrupt_transfer( handle, 0x81, bufs, 8, &BytesWritten, nTimeout);
     //ofLog() << "read " <<  BytesWritten << "bytes from endpoint address\n";
-/*
- *     for(i = 0; i< 5; i++){
- *       int ofs = i*7;
- *       //printf("Row %d: %d %d %d %d %d %d %d\n", i, bufs[ofs], bufs[ofs+1], bufs[ofs+2], bufs[ofs+3], bufs[ofs+4], bufs[ofs+5], bufs[ofs+6]);
- *     }
- */
+
+
+    for(i = 0; i< 1; i++){
+    int ofs = i*7;static_cast<int>
+      os << "Row:" <<
+        i << ' ' <<
+        static_cast<int>(bufs[ofs]) << ' ' <<
+        static_cast<int>(bufs[ofs+1]) << ' ' <<
+         static_cast<int>(bufs[ofs+2]) << ' ' <<
+        static_cast<int>(bufs[ofs+3]) << ' ' <<
+        static_cast<int>(bufs[ofs+4]) << ' ' <<
+        static_cast<int>(bufs[ofs+5]) << ' ' <<
+        static_cast<int>(bufs[ofs+6]) << '\n';
+        ofLog() << os.str();
+    }
+
 
     unsigned char *offset = &matrix[0][0][0];
 

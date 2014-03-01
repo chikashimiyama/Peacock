@@ -111,7 +111,7 @@ void PckVisualizer::vertexUpdate(unsigned char *matrix){
                 sensorColor[i][j] = ofFloatColor(1.0, 1.0, 1.0);
             }
 
-            sensorPosition[i][j].y = matrix[i*NUM_COLUMNS + j];
+            sensorPosition[i][j].y = static_cast<float>(matrix[i*NUM_COLUMNS + j]) / 255.0;
         }
     }
     sensorVbo.updateColorData(&sensorColor[0][0], NUM_SENSORS);
