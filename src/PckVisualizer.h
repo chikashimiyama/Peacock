@@ -19,6 +19,7 @@ class PckVisualizer{
 private:
     PckRecognizer* recognizer;
 
+    unsigned char *matrix;
     ofColor bgColor;
     ofColor gridColor;
     ofColor gridLineColor;
@@ -37,24 +38,23 @@ private:
     ofVbo sensorVbo, gridLineVbo;
     ofVbo thresholdPlaneVbo;
 
+
     void sensorSetup();
     void gridLineSetup();
     void thresholdPlaneSetup();
+
     bool statusFlag;
-
-    void vertexUpdate(unsigned char *matrix);
-
-
     // gui
     ofxPanel dataPanel;
-
+ sub
 public:
     PckVisualizer();
     ~PckVisualizer();
 
     inline void setRecognizer(PckRecognizer *recog);
-    void update(unsigned char *matrix);
+    void update();
 
+    void setup(unsigned char *matrix);
     void draw();
     void toggleStatus();
 

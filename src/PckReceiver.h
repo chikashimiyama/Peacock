@@ -15,15 +15,16 @@
 class PckReceiver{
 
     bool testMode;
-    float *matrix;
-    std::vector<char> serialbufferVector;
+    unsigned char *matrix;
+    unsigned char buffer[128];
+    unsigned char index;
     PckSerial serial;
 
 public:
     PckReceiver();
 
-    void setup();
-    void setMatrix(float *matrix);
+    void setup(unsigned char *matrix);
+
     void update();
     void simulateUpdate();
 };

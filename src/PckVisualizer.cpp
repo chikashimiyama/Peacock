@@ -10,14 +10,15 @@
 
 PckVisualizer::PckVisualizer(){
     bgColor = ofColor(0);
+    camera.setDistance(60);
+    camera.enableMouseInput();
+}
+
+void PckVisualizer::setup(unsigned char *matrix){
+    PckVisualizer:: matrix = matrix;
     sensorSetup();
     gridLineSetup();
     thresholdPlaneSetup();
-    camera.setDistance(60);
-
-    camera.enableMouseInput();
-
-
 }
 
 PckVisualizer::~PckVisualizer(){
@@ -100,7 +101,7 @@ void PckVisualizer::thresholdPlaneSetup(){
     thresholdPlaneVbo.setVertexData(thresholdPlaneData, 4, GL_STATIC_DRAW);
 }
 
-void PckVisualizer::vertexUpdate(unsigned char *matrix){
+void PckVisualizer::update(){
     float data;
     for(int i = 0; i< NUM_ROWS; i++){
         for(int j = 0; j < NUM_COLUMNS; j++){
@@ -111,16 +112,11 @@ void PckVisualizer::vertexUpdate(unsigned char *matrix){
                 sensorColor[i][j] = ofFloatColor(1.0, 1.0, 1.0);
             }
 
-            sensorPosition[i][j].y = static_cast<float>(matrix[i*NUM_COLUMNS + j]) / 255.0;
+            sensorPosition[i][j].y = static_cast<float>(matrix[i*NUM_COLUMNS + j]) / 10.0;
         }
     }
     sensorVbo.updateColorData(&sensorColor[0][0], NUM_SENSORS);
     sensorVbo.updateVertexData(&sensorPosition[0][0], NUM_SENSORS);
-
-}
-
-void PckVisualizer::update(unsigned char *matrix){
-    vertexUpdate(matrix);
 
 }
 

@@ -1,5 +1,4 @@
 #include "Peacock.h"
-#include "libusb.h"
 #include <sstream>
 
 Peacock::~Peacock(){
@@ -12,7 +11,8 @@ void Peacock::setup(){
 	ofSoundStreamSetup(2, 1, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
 
     synthesizer.setup(2,1,44100 ,ticksPerBuffer);
-    receiver.setup();
+    receiver.setup(matrix);
+    visualizer.setup(matrix);
 }
 
 
@@ -25,10 +25,10 @@ void Peacock::draw(){
 
 void Peacock::update(void){
 
-    unsigned char *offset = &matrix[0][0][0];
+    unsigned char *offset = &matrix[0];
 
     receiver.update();
-    visualizer.update(&matrix[0][0][0]);
+    visualizer.update();
 
 }
 

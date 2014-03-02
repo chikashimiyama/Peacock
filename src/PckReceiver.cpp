@@ -13,10 +13,9 @@
 
 PckReceiver::PckReceiver(){
     testMode = false;
-    serialbufferVector.reserve(128); // 128byte allocate
 }
 
-void PckReceiver::setup(){
+void PckReceiver::setup(unsigned char *matrix){
     serial.listDevices();
     vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
     if(deviceList.size() == 0){
@@ -28,6 +27,8 @@ void PckReceiver::setup(){
         ofLog(OF_LOG_FATAL_ERROR) << "PckReceiver: could not initialize serial";
         OF_EXIT_APP(1);
     }
+
+    PckReceiver::matrix = matrix;
 }
 
 
@@ -44,14 +45,28 @@ void PckReceiver::update(){
     if (testMode) {
         simulateUpdate();
     }
+    unsigned char byte, type;
 
-    int bt;
-    bt = serial.readByte();
-    if(bt == OF_SERIAL_ERROR){
-        ofLog(OF_LOG_WARNING) << "PckReceiver: Serial error detected.";
-    }else if(bt == OF_SERIAL_NO_DATA){
-        ofLog(OF_LOG_WARNING) << "PckReceiver: No data received";
-    }else{
-        ofLog() << bt;
+    while(serial.available() > 0){ // if there is something in the buffer
+
+        byte = serial.readByte();
+        switch(byte){ // end delimeter
+            case 0xFE:
+                ofLog() <<  buffer[0];
+
+                memcpy((void*)matrix, (void*)buffer, 35);
+                index = 0;
+                break;
+            case 0xFF:
+                index = 0;  // ensure that buffer is empty
+                break;
+            case 0xFD:
+                type = 0;
+                break;
+            default:
+                buffer[index] = byte;
+                index++;
+        }
+
     }
 }

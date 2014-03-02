@@ -196,7 +196,6 @@
 		<Unit filename="src/PckVisualizer.h" />
 		<Unit filename="src/Peacock.cpp" />
 		<Unit filename="src/Peacock.h" />
-		<Unit filename="src/libusb.h" />
 		<Unit filename="src/main.cpp">
 			<Option virtualFolder="src/" />
 		</Unit>

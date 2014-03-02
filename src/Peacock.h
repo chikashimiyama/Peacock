@@ -11,7 +11,7 @@ class Peacock : public ofBaseApp{
 
     bool fullScreenFlag, statusFlag;
 
-    unsigned char matrix[BUFFER_SIZE][NUM_ROWS][NUM_COLUMNS]; /**<  the 3D data with history */
+    unsigned char matrix[BUFFER_SIZE * NUM_ROWS * NUM_COLUMNS]; /**<  the 3D data with history */
 
     PckVisualizer visualizer; /**< an instance of visualizer */
     PckRecognizer recognizer; /**< an instance of data recognizer */
