@@ -1,17 +1,16 @@
-//
-//  PckRecognizer.h
-//  Peacock
-//
-//  Created by Chikashi Miyama on 11/22/13.
-//
-//
-
 #ifndef __Peacock__PckRecognizer__
 #define __Peacock__PckRecognizer__
 
 
 #include "ofThread.h"
 
+/**
+ * @brief Gesture Recognition class
+ * @details This class can be only instantiated by PckRecevier
+ * 
+ * @param analyzeEnterPoint [description]
+ * @return [description]
+ */
 class PckRecognizer {
 
 private:

@@ -1,10 +1,6 @@
-//
-//  PckConst.h
-//  Peacock
-//
-//  Created by Chikashi Miyama on 11/4/13.
-//
-//
+/**
+ * A hearder file for consts
+ */
 
 #ifndef Peacock_PckConst_h
 #define Peacock_PckConst_h

@@ -1,22 +1,11 @@
-//
-//  PckReceiver.cpp
-//  Peacock
-//
-//  Created by Chikashi Miyama on 11/4/13.
-//
-//
-
+#include "Peacock.h"
 #include "PckReceiver.h"
 #include "PckConst.h"
 #include "ofMain.h"
 #include "ofMath.h"
 
-PckReceiver::PckReceiver(){
-
-}
-
-void PckReceiver::setup(unsigned char *matrix){
-    serial.listDevices();
+void PckReceiver::setup(){
+    //serial.listDevices();
     vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
     if(deviceList.size() == 0){
         ofLog(OF_LOG_FATAL_ERROR) << "PckReceiver: no serial / CDC devices found. application abort...\n";
@@ -27,10 +16,8 @@ void PckReceiver::setup(unsigned char *matrix){
         ofLog(OF_LOG_FATAL_ERROR) << "PckReceiver: could not initialize serial";
         OF_EXIT_APP(1);
     }
-
-    PckReceiver::matrix = matrix;
+    ofLog() << "PckReceiver: established connection to Peacock Hardware";
 }
-
 
 void PckReceiver::threadedFunction(){
     ofLog() << "thread started";
@@ -40,32 +27,39 @@ void PckReceiver::threadedFunction(){
         while(serial.available() > 0){ // if there is something in the buffer
             byte = serial.readByte();
             switch(byte){ // end delimeter
-                case 0xFE:
-
+                case 0xFE:{
                     lock();
-                        // critical session
-                        memcpy((void*)matrix, (void*)buffer, 35);
+                        Peacock* peacock = static_cast<Peacock*>(ofGetAppPtr());
+                        void* matrix = static_cast<void*>(peacock->getMatrix());
+                        memcpy(matrix, static_cast<void*>(buffer), 35);
                     unlock();
-
                     index = 0;
                     break;
-                case 0xFF:
+                }
+                case 0xFF:{
                     index = 0;  // ensure that buffer is empty
                     break;
-                case 0xFD:
+                }
+                case 0xFD:{
                     type = 0;
                     break;
-                default:
+                }
+                default:{
                     buffer[index] = byte;
                     index++;
+                }
             }
 
         }
 
-        PckSynthesizer* synthesizer = PckSynthesizer::getInstance(); // singleton
+        Peacock *peacock = static_cast<Peacock*>(ofGetAppPtr());
+        PckSynthesizer *synthesizer = peacock->getSynthesizer();
         synthesizer->lock();
         synthesizer->pushNotification(PCK_ENTER);
         synthesizer->unlock();
     }// thread loop
+
+    serial.close();
+    ofLog()<< "PckReceiver: connection to Peacock hardware closed.";
 
 }

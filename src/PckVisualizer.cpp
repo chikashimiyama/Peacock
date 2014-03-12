@@ -1,12 +1,5 @@
-//
-//  PckVisualizer.cpp
-//  Peacock
-//
-//  Created by Chikashi Miyama on 11/4/13.
-//
-//
-
 #include "PckVisualizer.h"
+#include "Peacock.h"
 
 PckVisualizer::PckVisualizer(){
     bgColor = ofColor(0);
@@ -14,8 +7,7 @@ PckVisualizer::PckVisualizer(){
     camera.enableMouseInput();
 }
 
-void PckVisualizer::setup(unsigned char *matrix){
-    PckVisualizer:: matrix = matrix;
+void PckVisualizer::setup(){
     sensorSetup();
     gridLineSetup();
     thresholdPlaneSetup();
@@ -103,6 +95,9 @@ void PckVisualizer::thresholdPlaneSetup(){
 
 void PckVisualizer::update(){
     float data;
+    Peacock *peacock = static_cast<Peacock*>(ofGetAppPtr());
+    unsigned char* matrix = peacock->getMatrix();
+
     for(int i = 0; i< NUM_ROWS; i++){
         for(int j = 0; j < NUM_COLUMNS; j++){
             data = matrix[i*NUM_COLUMNS];

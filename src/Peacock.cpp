@@ -2,21 +2,28 @@
 #include <sstream>
 
 Peacock::~Peacock(){
-    receiver.stopThread();
+
+    if(receiver.isThreadRunning()){
+        receiver.stopThread();
+        ofLog() << "Peacock: receiver thread stopped";
+    }
+
+    if(synthesizer.isThreadRunning()){
+        synthesizer.stopThread();
+        ofLog() << "Peacock: synthesizer thread stopped";
+    }
 }
 
 void Peacock::setup(){
-
     int ticksPerBuffer = 8;	// 8 * 64 = buffer len of 512
 	ofSoundStreamSetup(2, 1, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
+    synthesizer.setup(2,1,44100 ,ticksPerBuffer, false);
+    receiver.setup();
+    visualizer.setup();
 
-    synthesizer = PckSynthesizer::getInstance();
-    synthesizer->setup(2,1,44100 ,ticksPerBuffer, false);
-    receiver.setup(matrix);
-    visualizer.setup(matrix);
-
+    // start thread;
     receiver.startThread(true, false);
-    synthesizer->startThread(true, false);
+    synthesizer.startThread(true, false);
 }
 
 //--------------------------------------------------------------
@@ -34,62 +41,32 @@ void Peacock::update(void){
 //--------------------------------------------------------------
 void Peacock::keyPressed(int key){
     switch(key) {
-        case 't':
+        case 't':{
             break;
-        case 's':
+        }
+        case 's':{
             break;
-        case 'f':
+        }
+        case 'f':{
             fullScreenFlag = !fullScreenFlag;
             ofSetFullscreen(fullScreenFlag);
             break;
+        }
+        case 'q':{
+            synthesizer.stopThread();
+            receiver.stopThread();
+
+            break;
+        }
     }
 }
 
-//--------------------------------------------------------------
-void Peacock::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void Peacock::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void Peacock::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void Peacock::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void Peacock::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void Peacock::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void Peacock::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void Peacock::dragEvent(ofDragInfo dragInfo){
-
-}
 
 void Peacock::audioReceived(float * input, int bufferSize, int nChannels) {
-	synthesizer->audioReceived(input, bufferSize, nChannels);
+	synthesizer.audioReceived(input, bufferSize, nChannels);
 }
 
 //--------------------------------------------------------------
 void Peacock::audioRequested(float * output, int bufferSize, int nChannels) {
-	synthesizer->audioRequested(output, bufferSize, nChannels);
+	synthesizer.audioRequested(output, bufferSize, nChannels);
 }

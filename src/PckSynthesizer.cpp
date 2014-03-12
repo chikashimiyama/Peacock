@@ -38,10 +38,8 @@ void PckSynthesizer::threadedFunction(void){
 			notificationQueue.front();
 			notificationQueue.pop();
 			pd.sendBang("fromOF");
-			//ofLog() << "notification poped";
 		}
 		unlock();
-		sleep(1000);// in order to avoid stack over flow in Pd
 	}
 }
 

@@ -1,11 +1,3 @@
-//
-//  PckVisualizer.h
-//  Peacock
-//
-//  Created by Chikashi Miyama on 11/4/13.
-//
-//
-
 #ifndef __Peacock__PckVisualizer__
 #define __Peacock__PckVisualizer__
 
@@ -14,12 +6,15 @@
 #include "PckRecognizer.h"
 #include "ofxGui.h"
 
+/**
+ * @brief OepnGL-based visualizer class
+ * @details This class utilizes the OpenFrameworks Graphic functionalities to render the current status of Peacock Hardware. This class conforms to Singleton design pattern. 
+ * It is not possible to create multiple instances of this class
+ */
 class PckVisualizer{
 
 private:
-    PckRecognizer* recognizer;
 
-    unsigned char *matrix;
     ofColor bgColor;
     ofColor gridColor;
     ofColor gridLineColor;
@@ -54,15 +49,13 @@ public:
     inline void setRecognizer(PckRecognizer *recog);
     void update();
 
-    void setup(unsigned char *matrix);
+    void setup();
     void draw();
     void toggleStatus();
 
 };
 
 
-void PckVisualizer::setRecognizer(PckRecognizer *recog){
-    recognizer = recog;
-}
+
 
 #endif /* defined(__Peacock__PckVisualizer__) */
