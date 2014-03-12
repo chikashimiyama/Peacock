@@ -3,35 +3,100 @@
 	{
 		"selected_items":
 		[
+			[
+				"de",
+				"debugMode"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"contents": "/*!\n	\\mainpage Peacock\n	\\section intro What is Peacock\n	Peacock is a non-haptic 3D interface for musical and multimedia performances\n*/",
 			"file": "doxygen/intro.dox",
-			"file_size": 135,
-			"file_write_time": 1394491152000000,
 			"settings":
 			{
 				"buffer_size": 135,
 				"line_ending": "Unix",
 				"name": "/*!"
 			}
+		},
+		{
+			"file": ".gitignore",
+			"settings":
+			{
+				"buffer_size": 16,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Peacock.sublime-project",
+			"settings":
+			{
+				"buffer_size": 102,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/PckSynthesizer.h",
+			"settings":
+			{
+				"buffer_size": 1302,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/PckSynthesizer.cpp",
+			"settings":
+			{
+				"buffer_size": 1101,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/chikashi/Downloads/OSC-0.1/packOSC-help.pd",
+			"settings":
+			{
+				"buffer_size": 3870,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Peacock.cpp",
+			"settings":
+			{
+				"buffer_size": 2305,
+				"line_ending": "Unix"
+			}
 		}
 	],
-	"build_system": "",
+	"build_system": "Packages/Makefile/Make.sublime-build",
 	"command_palette":
 	{
-		"height": 0.0,
+		"height": 392.0,
 		"selected_items":
 		[
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: List Packages"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			]
 		],
-		"width": 0.0
+		"width": 449.0
 	},
 	"console":
 	{
-		"height": 0.0
+		"height": 125.0
 	},
 	"distraction_free":
 	{
@@ -78,7 +143,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -101,6 +166,165 @@
 						{
 							"auto_name": "/*!",
 							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": ".gitignore",
+					"settings":
+					{
+						"buffer_size": 16,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16,
+								16
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Peacock.sublime-project",
+					"settings":
+					{
+						"buffer_size": 102,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								102,
+								102
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/PckSynthesizer.h",
+					"settings":
+					{
+						"buffer_size": 1302,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								847,
+								847
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 385.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/PckSynthesizer.cpp",
+					"settings":
+					{
+						"buffer_size": 1101,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								554,
+								554
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 90.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/chikashi/Downloads/OSC-0.1/packOSC-help.pd",
+					"settings":
+					{
+						"buffer_size": 3870,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/Peacock.cpp",
+					"settings":
+					{
+						"buffer_size": 2305,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								449,
+								449
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -142,6 +366,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 181.0
+	},
 	"replace":
 	{
 		"height": 0.0
@@ -167,6 +395,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_width": 224.0,
 	"status_bar_visible": true
 }

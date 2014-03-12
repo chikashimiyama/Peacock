@@ -2,7 +2,7 @@
 #include <sstream>
 
 Peacock::~Peacock(){
-
+    receiver.stopThread();
 }
 
 void Peacock::setup(){
@@ -10,26 +10,25 @@ void Peacock::setup(){
     int ticksPerBuffer = 8;	// 8 * 64 = buffer len of 512
 	ofSoundStreamSetup(2, 1, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
 
-    synthesizer.setup(2,1,44100 ,ticksPerBuffer);
+    synthesizer = PckSynthesizer::getInstance();
+    synthesizer->setup(2,1,44100 ,ticksPerBuffer, false);
     receiver.setup(matrix);
     visualizer.setup(matrix);
-}
 
+    receiver.startThread(true, false);
+    synthesizer->startThread(true, false);
+}
 
 //--------------------------------------------------------------
 void Peacock::draw(){
     visualizer.draw();
 }
 
-
-
 void Peacock::update(void){
-
     unsigned char *offset = &matrix[0];
-
-    receiver.update();
+    receiver.lock();
     visualizer.update();
-
+    receiver.unlock();
 }
 
 //--------------------------------------------------------------
@@ -87,10 +86,10 @@ void Peacock::dragEvent(ofDragInfo dragInfo){
 }
 
 void Peacock::audioReceived(float * input, int bufferSize, int nChannels) {
-	synthesizer.audioReceived(input, bufferSize, nChannels);
+	synthesizer->audioReceived(input, bufferSize, nChannels);
 }
 
 //--------------------------------------------------------------
 void Peacock::audioRequested(float * output, int bufferSize, int nChannels) {
-	synthesizer.audioRequested(output, bufferSize, nChannels);
+	synthesizer->audioRequested(output, bufferSize, nChannels);
 }

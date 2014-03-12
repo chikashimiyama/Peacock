@@ -28,10 +28,10 @@
 
 #define THRESHOLD 10.0
 
-enum PCKDetection{
+enum PCKNotification{
     PCK_ON_TIME,
     PCK_OFF_TIME,
-    PCK_MOVEMENT,
+    PCK_ENTER,
     PCK_HAND_TRACE,
     PCK_RECOGNITION,
     PCK_CONTOUR,

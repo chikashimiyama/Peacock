@@ -15,7 +15,7 @@ class Peacock : public ofBaseApp{
 
     PckVisualizer visualizer; /**< an instance of visualizer */
     PckRecognizer recognizer; /**< an instance of data recognizer */
-    PckSynthesizer synthesizer; /**< an instance of synthesizer */
+    PckSynthesizer *synthesizer; /**< a pointer to the singleton synthesizer */
     PckReceiver receiver;
 
     bool forwarding; /**< OSC forwarding flag */

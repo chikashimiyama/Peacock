@@ -46,7 +46,7 @@ private:
     bool statusFlag;
     // gui
     ofxPanel dataPanel;
- sub
+
 public:
     PckVisualizer();
     ~PckVisualizer();

@@ -12,7 +12,7 @@
 #include "ofMath.h"
 
 PckReceiver::PckReceiver(){
-    testMode = false;
+
 }
 
 void PckReceiver::setup(unsigned char *matrix){
@@ -32,41 +32,41 @@ void PckReceiver::setup(unsigned char *matrix){
 }
 
 
-void PckReceiver::simulateUpdate(){
+void PckReceiver::threadedFunction(){
+    ofLog() << "thread started";
+    while(isThreadRunning()){
 
-    for (int i = 0 ; i < NUM_ROWS; i++){
-        for(int j = 0; j < NUM_COLUMNS; j ++){
-            matrix[i*NUM_COLUMNS + j] = ofRandom(0.0, 20.0);
-        }
-    }
-}
+        unsigned char byte, type;
+        while(serial.available() > 0){ // if there is something in the buffer
+            byte = serial.readByte();
+            switch(byte){ // end delimeter
+                case 0xFE:
 
-void PckReceiver::update(){
-    if (testMode) {
-        simulateUpdate();
-    }
-    unsigned char byte, type;
+                    lock();
+                        // critical session
+                        memcpy((void*)matrix, (void*)buffer, 35);
+                    unlock();
 
-    while(serial.available() > 0){ // if there is something in the buffer
+                    index = 0;
+                    break;
+                case 0xFF:
+                    index = 0;  // ensure that buffer is empty
+                    break;
+                case 0xFD:
+                    type = 0;
+                    break;
+                default:
+                    buffer[index] = byte;
+                    index++;
+            }
 
-        byte = serial.readByte();
-        switch(byte){ // end delimeter
-            case 0xFE:
-                ofLog() <<  buffer[0];
-
-                memcpy((void*)matrix, (void*)buffer, 35);
-                index = 0;
-                break;
-            case 0xFF:
-                index = 0;  // ensure that buffer is empty
-                break;
-            case 0xFD:
-                type = 0;
-                break;
-            default:
-                buffer[index] = byte;
-                index++;
         }
 
-    }
+        PckSynthesizer* synthesizer = PckSynthesizer::getInstance(); // singleton
+        ofLog() << "notification pushed";
+        //synthesizer->lock();
+        //synthesizer->pushNotification(PCK_ENTER);
+        //synthesizer->unlock();
+    }// thread loop
+
 }

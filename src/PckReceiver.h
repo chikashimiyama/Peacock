@@ -11,22 +11,22 @@
 
 #include <vector>
 #include "PckSerial.h"
+#include "PckSynthesizer.h"
+#include "ofThread.h"
 
-class PckReceiver{
+class PckReceiver: public ofThread{
 
-    bool testMode;
     unsigned char *matrix;
     unsigned char buffer[128];
     unsigned char index;
     PckSerial serial;
 
+
 public:
     PckReceiver();
-
     void setup(unsigned char *matrix);
+    void threadedFunction();
 
-    void update();
-    void simulateUpdate();
 };
 
 
