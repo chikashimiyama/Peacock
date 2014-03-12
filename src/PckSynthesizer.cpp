@@ -22,7 +22,7 @@ const int sampleRate, const int ticksPerBuffer, const bool debugMode) {
 	pd.addReceiver(*this);
 	ofLog() << "start patch";
 	Patch patch;
-	pd.openPatch("pd/osc.pd");
+	pd.openPatch("pd/test.pd");
 	PckSynthesizer::debugMode = debugMode;
 }
 
@@ -38,7 +38,7 @@ void PckSynthesizer::threadedFunction(void){
 			notificationQueue.front();
 			notificationQueue.pop();
 			pd.sendBang("fromOF");
-			ofLog() << "notification poped";
+			//ofLog() << "notification poped";
 		}
 		unlock();
 		sleep(1000);// in order to avoid stack over flow in Pd

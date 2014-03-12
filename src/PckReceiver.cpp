@@ -63,10 +63,9 @@ void PckReceiver::threadedFunction(){
         }
 
         PckSynthesizer* synthesizer = PckSynthesizer::getInstance(); // singleton
-        ofLog() << "notification pushed";
-        //synthesizer->lock();
-        //synthesizer->pushNotification(PCK_ENTER);
-        //synthesizer->unlock();
+        synthesizer->lock();
+        synthesizer->pushNotification(PCK_ENTER);
+        synthesizer->unlock();
     }// thread loop
 
 }

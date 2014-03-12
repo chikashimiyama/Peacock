@@ -1,0 +1,9 @@
+#N canvas 2540 291 450 300 10;
+#X obj 147 168 osc~ 880;
+#X obj 142 245 dac~;
+#X obj 168 61 r fromOSC;
+#X obj 169 109 random 1000;
+#X connect 0 0 1 0;
+#X connect 0 0 1 1;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;

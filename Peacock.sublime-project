@@ -2,7 +2,8 @@
 	"folders":
 	[
 		{
-			"path": "/home/chikashi/of_v0.8.0_linux_release/apps/myApps/Peacock"
+			"follow_symlinks": true,
+			"path": "."
 		}
 	]
 }
