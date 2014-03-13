@@ -26,8 +26,10 @@
 #define NUM_GRID_LINES (NUM_COLUMNS + NUM_ROWS)
 #define DISTANCE 10.0
 
-#define THRESHOLD 10.0
+#define THRESHOLD 30.0
 #define HEIGHT_ONSET 15.0
+
+#define Y_SCALER 0.2
 
 enum PCKNotification{
     PCK_ON_TIME,

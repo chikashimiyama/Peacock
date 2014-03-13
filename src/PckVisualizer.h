@@ -27,8 +27,8 @@ private:
     ofEasyCam camera;
 
 
-    ofFloatColor sensorColor[NUM_ROWS][NUM_COLUMNS];
-    ofVec3f sensorPosition[NUM_ROWS][NUM_COLUMNS];
+    ofFloatColor sensorColor[NUM_ROWS][NUM_COLUMNS][2];
+    ofVec3f sensorPosition[NUM_ROWS][NUM_COLUMNS][2];
 
     ofVec3f gridLineData[NUM_GRID_LINES][2];
 
