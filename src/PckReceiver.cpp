@@ -38,19 +38,7 @@ void PckReceiver::noiseGate(unsigned char *matrix){
 
 }
 
-float PckReceiver::calculateCentroid(unsigned char *array, int sizeOfArray){
-    float middle = (static_cast<float>(sizeOfArray) - 1.0)/ 2.0;
-    float bias, force = 0.0,centroid;
-    int sum = 0;
 
-    for(int i = 0; i < sizeOfArray; i++){
-        bias = static_cast<float>(i) - middle;
-        force += bias * static_cast<float>(array[i]);
-        sum += array[i];
-    }
-    centroid = force / static_cast<float>(sum);
-    return centroid;
-}
 
 int PckReceiver::matrixDelta(unsigned char* currentMatrix, unsigned char* previousMatrix){
     int delta = 0;
@@ -81,7 +69,9 @@ void PckReceiver::threadedFunction(){
                     lowPassFilter(buffer, preMatrix);
                     int total = matrixTotal(buffer); // check the total value
                     int delta = matrixDelta(buffer, preMatrix); // check the difference
-
+                    float localRowCentroids[NUM_COLUMNS];
+                    float localColumnCentroids[NUM_ROWS];
+                    calculateAllCentroids(buffer, localRowCentroids, localColumnCentroids);
                     /****** CRITICAL SESSIONS ********/
                     lock();
                         Peacock* peacock = static_cast<Peacock*>(ofGetAppPtr());
@@ -98,7 +88,9 @@ void PckReceiver::threadedFunction(){
                         // set the precalculated total and delta buffer in the shared resource
                         frameDataPtr->totalValue = total; 
                         frameDataPtr->totalDelta = delta;
-
+                        // copy data of centroids
+                        memcpy(static_cast<void*>(frameDataPtr->rowCentroids), static_cast<void*>(localRowCentroids), sizeof(float) * NUM_COLUMNS);
+                        memcpy(static_cast<void*>(frameDataPtr->columnCentroids), static_cast<void*>(localColumnCentroids), sizeof(float) * NUM_ROWS);
                         // advance frame index by one
                         peacock->setFrameIndex(nextFrameIndex);
                     unlock();

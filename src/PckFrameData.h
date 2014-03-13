@@ -18,8 +18,8 @@ struct PckFrameData {
 
 	vector<int> peaks;
 	
-	float rowCentroids[NUM_ROWS];
-	float columnCentroids[NUM_COLUMNS];
+	float rowCentroids[NUM_COLUMNS];
+	float columnCentroids[NUM_ROWS];
 };
 
 #endif

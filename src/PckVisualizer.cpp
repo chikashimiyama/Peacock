@@ -8,10 +8,33 @@ PckVisualizer::PckVisualizer(){
 }
 
 void PckVisualizer::setup(){
+    centroidSetup();
     sensorSetup();
     gridLineSetup();
     thresholdPlaneSetup();
     dataPanelSetup();
+}
+
+void PckVisualizer::centroidSetup(){
+
+    rowCentroidColor = ofColor(125, 255, 125);
+    columnCentroidColor = ofColor(125, 125, 255);
+    // row centroids
+    for(int i = 0; i < NUM_COLUMNS; i++){
+        rowCentroidPosition[i].x = (i - MIDDLE_COLUMN) * DISTANCE;
+        rowCentroidPosition[i].y = HEIGHT_ONSET;
+        rowCentroidPosition[i].z = 0.0; // varies
+    }
+    // column centroids
+    for(int i = 0; i < NUM_ROWS; i++){
+        columnCentroidPosition[i].x = 0.0; // varies
+        columnCentroidPosition[i].y = HEIGHT_ONSET;
+        columnCentroidPosition[i].z = (i- MIDDLE_ROW) * DISTANCE;
+    }
+
+    rowCentroidVbo.setVertexData(&rowCentroidPosition[0], NUM_COLUMNS, GL_DYNAMIC_DRAW);
+    columnCentroidVbo.setVertexData(&columnCentroidPosition[0],NUM_ROWS, GL_DYNAMIC_DRAW);
+
 }
 
 void PckVisualizer::sensorSetup(){
@@ -34,7 +57,6 @@ void PckVisualizer::sensorSetup(){
     }
     sensorVbo.setColorData(&sensorColor[0][0][0], NUM_SENSORS*2, GL_DYNAMIC_DRAW);
     sensorVbo.setVertexData(&sensorPosition[0][0][0], NUM_SENSORS*2, GL_DYNAMIC_DRAW);
-
 }
 
 
@@ -135,12 +157,22 @@ void PckVisualizer::update(){
             sensorPosition[i][j][1].y = HEIGHT_ONSET - (static_cast<float>(copiedCurrentMatrix[i*NUM_COLUMNS + j]) * Y_SCALER);
         }
     }
+    for(int i = 0;i < NUM_ROWS; i++){
+       columnCentroidPosition[i].x = copiedFrameData.columnCentroids[i] * DISTANCE;
+    }
+    for(int i = 0;i < NUM_COLUMNS; i++){
+       rowCentroidPosition[i].z = copiedFrameData.rowCentroids[i] * DISTANCE;
+    }
+
+
 
     totalValueSlider = copiedFrameData.totalValue;
     totalDeltaSlider = copiedFrameData.totalDelta;
 
     sensorVbo.updateColorData(&sensorColor[0][0][0], NUM_SENSORS*2);
     sensorVbo.updateVertexData(&sensorPosition[0][0][0], NUM_SENSORS*2);
+    columnCentroidVbo.updateVertexData(&columnCentroidPosition[0], NUM_ROWS);
+    rowCentroidVbo.updateVertexData(&rowCentroidPosition[0], NUM_COLUMNS);
 
 }
 
@@ -157,6 +189,12 @@ void PckVisualizer::draw(){
     ofSetLineWidth(1);
     gridLineVbo.draw(GL_LINES, 0, NUM_GRID_LINES*2);
     thresholdPlaneVbo.draw(GL_LINE_LOOP, 0, 4);
+
+    glPointSize(10.0);
+    ofSetColor(rowCentroidColor);
+    rowCentroidVbo.draw(GL_POINTS, 0, NUM_COLUMNS);
+    ofSetColor(columnCentroidColor);
+    columnCentroidVbo.draw(GL_POINTS, 0, NUM_ROWS);
 
     camera.end();
 

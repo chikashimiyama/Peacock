@@ -5,6 +5,7 @@
 #include "PckSerial.h"
 #include "PckSynthesizer.h"
 #include "ofThread.h"
+#include "PckCentroid.h"
 
 /**
  * @brief CDC Interface to Peacock Hardware
@@ -13,7 +14,7 @@
  * Usually this thread receives data of sensors more than 1000 time per seconds and
  * cooks the received value with lowpass fiter and hysteresis
  */
-class PckReceiver: public ofThread{
+class PckReceiver: public ofThread, public PckCentroid{
 
 private:
     unsigned char buffer[128];
@@ -23,8 +24,7 @@ private:
 
     int matrixTotal(unsigned char* matrix);
 	int matrixDelta(unsigned char* currentMatrix, unsigned char* previousMatrix);
-	float calculateCentroid(unsigned char *array, int sizeOfArray);
-	
+
 	void lowPassFilter(unsigned char* currentMatrix, unsigned char* previousMatrix);
 	void noiseGate(unsigned char* matrix);
 	void clearMatrix(unsigned char* matrix);
@@ -40,7 +40,6 @@ public:
     void setup();
     void threadedFunction();
 
-    float calcCentroid(unsigned char* array, int sizeOfArray);
 
 
 };

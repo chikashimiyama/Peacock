@@ -22,6 +22,7 @@ private:
 
     ofColor bgColor;
     ofColor gridColor;
+    ofColor rowCentroidColor, columnCentroidColor;
     ofColor gridLineColor;
 
     ofEasyCam camera;
@@ -29,7 +30,8 @@ private:
 
     ofFloatColor sensorColor[NUM_ROWS][NUM_COLUMNS][2];
     ofVec3f sensorPosition[NUM_ROWS][NUM_COLUMNS][2];
-
+    ofVec3f rowCentroidPosition[NUM_COLUMNS];
+    ofVec3f columnCentroidPosition[NUM_ROWS];
     ofVec3f gridLineData[NUM_GRID_LINES][2];
 
     ofFloatColor thresholdPlaneColor[4];
@@ -38,8 +40,12 @@ private:
     ofVbo sensorVbo, gridLineVbo;
     ofVbo thresholdPlaneVbo;
 
+    ofVbo rowCentroidVbo;
+    ofVbo columnCentroidVbo;
+
 
     void sensorSetup();
+    void centroidSetup();
     void gridLineSetup();
     void thresholdPlaneSetup();
     void dataPanelSetup();
@@ -58,7 +64,7 @@ private:
 
     ofxFloatSlider columnCentroidSlider;
     ofxFloatSlider rowCentroidSlider;
-    
+
 public:
     PckVisualizer();
 
