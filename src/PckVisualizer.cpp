@@ -101,8 +101,10 @@ void PckVisualizer::dataPanelSetup(){
     dataPanel.add(totalDeltaSlider.setup("delta", 0, 0, MAX_VALUE* 3));
 
     dataPanel.add(pointsOverThresholdSlider.setup("current", 0, 0, NUM_SENSORS));
-    dataPanel.add(positionOfHandParameter.setup("hand position", ""));
-    dataPanel.add(gestureDurationParameter.setup("gesture dur.", 0, 0, NUM_FRAMES));
+
+    dataPanel.add(columnCentroidSlider.setup("column centroid", 0.0, -3.0, 3.0));
+    dataPanel.add(rowCentroidSlider.setup("row centroid", 0.0, -2.0, 2.0));
+
 
 
 }

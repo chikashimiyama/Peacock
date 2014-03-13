@@ -56,6 +56,9 @@ private:
     ofxLabel positionOfHandParameter;
     ofxIntSlider gestureDurationParameter;
 
+    ofxFloatSlider columnCentroidSlider;
+    ofxFloatSlider rowCentroidSlider;
+    
 public:
     PckVisualizer();
 

@@ -3,6 +3,9 @@
 
 #include <vector>
 
+/**
+ * @brief a small packet of information of one Peacock frame
+ */
 struct PckFrameData {
 
 	unsigned char matrix[NUM_ROWS * NUM_COLUMNS];
@@ -15,8 +18,8 @@ struct PckFrameData {
 
 	vector<int> peaks;
 	
-	float verticalCentroid;
-	float horizontalCentroid;
+	float rowCentroids[NUM_ROWS];
+	float columnCentroids[NUM_COLUMNS];
 };
 
 #endif

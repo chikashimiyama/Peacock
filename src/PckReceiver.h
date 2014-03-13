@@ -23,8 +23,8 @@ private:
 
     int matrixTotal(unsigned char* matrix);
 	int matrixDelta(unsigned char* currentMatrix, unsigned char* previousMatrix);
+	float calculateCentroid(unsigned char *array, int sizeOfArray);
 	
-
 	void lowPassFilter(unsigned char* currentMatrix, unsigned char* previousMatrix);
 	void noiseGate(unsigned char* matrix);
 	void clearMatrix(unsigned char* matrix);
@@ -39,6 +39,8 @@ public:
 
     void setup();
     void threadedFunction();
+
+    float calcCentroid(unsigned char* array, int sizeOfArray);
 
 
 };
