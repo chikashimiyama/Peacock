@@ -17,7 +17,7 @@ Peacock::~Peacock(){
 void Peacock::setup(){
     int ticksPerBuffer = 8;	// 8 * 64 = buffer len of 512
 	ofSoundStreamSetup(2, 1, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
-    synthesizer.setup(2,1,44100 ,ticksPerBuffer, false);
+    synthesizer.setup(2, 1, 44100 ,ticksPerBuffer, false);
     receiver.setup();
     visualizer.setup();
 
@@ -32,10 +32,14 @@ void Peacock::draw(){
 }
 
 void Peacock::update(void){
-    unsigned char *offset = &matrix[0];
+
+    /* critical session receiver should not access the shared memory */
     receiver.lock();
-    visualizer.update();
+    visualizer.copyCurrentFrameData(&frameData[0], frameIndex);
     receiver.unlock();
+    /* end of critial session */
+
+    visualizer.update();
 }
 
 //--------------------------------------------------------------

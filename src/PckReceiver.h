@@ -17,9 +17,17 @@ class PckReceiver: public ofThread{
 
 private:
     unsigned char buffer[128];
+    unsigned char preMatrix[35];
     unsigned char index;
     PckSerial serial;
 
+    int matrixTotal(unsigned char* matrix);
+	int matrixDelta(unsigned char* currentMatrix, unsigned char* previousMatrix);
+	
+
+	void lowPassFilter(unsigned char* currentMatrix, unsigned char* previousMatrix);
+	void noiseGate(unsigned char* matrix);
+	void clearMatrix(unsigned char* matrix);
 public:
 
 	/**
@@ -31,6 +39,8 @@ public:
 
     void setup();
     void threadedFunction();
+
+
 };
 
 

@@ -1,8 +1,10 @@
 #ifndef __Peacock__Peacock__
 #define __Peacock__Peacock__
 
-#include "PckConst.h"
 #include "ofMain.h"
+
+#include "PckConst.h"
+#include "PckFrameData.h"
 #include "PckVisualizer.h"
 #include "PckSynthesizer.h"
 #include "PckRecognizer.h"
@@ -18,7 +20,17 @@ class Peacock : public ofBaseApp{
 private:
     bool fullScreenFlag, statusFlag;
 
-    unsigned char matrix[BUFFER_SIZE * NUM_ROWS * NUM_COLUMNS]; /**<  the 3D data with history */
+    /**
+     *  @defgroup shared memory
+     *  @{
+     */
+
+    PckFrameData frameData[NUM_FRAMES];
+    int frameIndex; /**< the newest matrix recorded */
+    
+    /**
+     *  @}
+     */
 
     PckVisualizer visualizer; /**< an submodule of this class. runs in this thread */
     PckSynthesizer synthesizer; /**< an instance of PckSynthesizer */
@@ -35,7 +47,9 @@ public:
      */
     ~Peacock();
 
-    inline unsigned char* getMatrix();
+    inline PckFrameData* getFrameData(int frame);
+    inline int getFrameIndex();
+    inline void setFrameIndex(int newFrameIndex);
     inline PckSynthesizer* getSynthesizer();
 
     //inline static bool isInstantiated();
@@ -55,11 +69,21 @@ public:
 
 };
 
-unsigned char* Peacock::getMatrix(){
-    return matrix;
+PckFrameData* Peacock::getFrameData(int frame){
+    return &frameData[frame];
+}
+
+int Peacock::getFrameIndex(){
+    return frameIndex;
+}
+
+void Peacock::setFrameIndex(int newFrameIndex){
+    frameIndex = newFrameIndex;
 }
 
 PckSynthesizer* Peacock::getSynthesizer(){
     return &synthesizer;
 }
 #endif
+
+

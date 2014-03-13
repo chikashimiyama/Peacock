@@ -11,12 +11,8 @@ void PckVisualizer::setup(){
     sensorSetup();
     gridLineSetup();
     thresholdPlaneSetup();
+    dataPanelSetup();
 }
-
-PckVisualizer::~PckVisualizer(){
-
-}
-
 
 void PckVisualizer::sensorSetup(){
     // grid vertices
@@ -34,7 +30,6 @@ void PckVisualizer::sensorSetup(){
     sensorVbo.setColorData(&sensorColor[0][0], NUM_SENSORS, GL_DYNAMIC_DRAW);
     sensorVbo.setVertexData(&sensorPosition[0][0], NUM_SENSORS, GL_DYNAMIC_DRAW);
 
-    dataPanel.setup("data");
 }
 
 
@@ -44,11 +39,11 @@ void PckVisualizer::gridLineSetup(){
     for(int i = 0; i< NUM_ROWS; i++){
         float x = static_cast<float>(i);
         gridLineData[i][0]. x = -MIDDLE_COLUMN * DISTANCE;
-        gridLineData[i][0]. y = 0.0;
+        gridLineData[i][0]. y = HEIGHT_ONSET;
         gridLineData[i][0]. z = (x - MIDDLE_ROW) * DISTANCE;
 
         gridLineData[i][1]. x = MIDDLE_COLUMN * DISTANCE;
-        gridLineData[i][1]. y = 0.0;
+        gridLineData[i][1]. y = HEIGHT_ONSET;
         gridLineData[i][1]. z = (x - MIDDLE_ROW) * DISTANCE;
     }
     for(int i = NUM_ROWS; i< NUM_GRID_LINES; i++){
@@ -56,11 +51,11 @@ void PckVisualizer::gridLineSetup(){
         float x = static_cast<float>(i - NUM_ROWS);
 
         gridLineData[i][0]. x = (x - MIDDLE_COLUMN) * DISTANCE;
-        gridLineData[i][0]. y = 0.0;
+        gridLineData[i][0]. y = HEIGHT_ONSET;
         gridLineData[i][0]. z = -MIDDLE_ROW * DISTANCE;
 
         gridLineData[i][1]. x =  (x - MIDDLE_COLUMN) * DISTANCE;
-        gridLineData[i][1]. y = 0.0;
+        gridLineData[i][1]. y = HEIGHT_ONSET;
         gridLineData[i][1]. z =  MIDDLE_ROW * DISTANCE;
     }
 
@@ -93,23 +88,47 @@ void PckVisualizer::thresholdPlaneSetup(){
     thresholdPlaneVbo.setVertexData(thresholdPlaneData, 4, GL_STATIC_DRAW);
 }
 
-void PckVisualizer::update(){
-    float data;
-    Peacock *peacock = static_cast<Peacock*>(ofGetAppPtr());
-    unsigned char* matrix = peacock->getMatrix();
+void PckVisualizer::dataPanelSetup(){
+    dataPanel.setup("general info:");
 
+    dataPanel.add(currentFrameSlider.setup("current frame", 0, 0, NUM_FRAMES));
+    dataPanel.add(totalValueSlider.setup("total", 0, 0, NUM_SENSORS * MAX_VALUE));
+    dataPanel.add(totalDeltaSlider.setup("delta", 0, 0, MAX_VALUE* 3));
+
+    dataPanel.add(pointsOverThresholdSlider.setup("current", 0, 0, NUM_SENSORS));
+    dataPanel.add(positionOfHandParameter.setup("hand position", ""));
+    dataPanel.add(gestureDurationParameter.setup("gesture dur.", 0, 0, NUM_FRAMES));
+
+
+}
+
+void PckVisualizer::copyCurrentFrameData(PckFrameData* frameDataPtr, int frameIndex){
+    PckFrameData* frameData = &frameDataPtr[frameIndex];
+    memcpy(static_cast<void*>(&copiedFrameData), static_cast<void*>(frameData),  sizeof(PckFrameData));
+    currentFrameSlider = frameIndex;
+}
+
+void PckVisualizer::update(){
+
+    //update matrix
+    float data;
+    unsigned char* copiedCurrentMatrix = copiedFrameData.matrix;
     for(int i = 0; i< NUM_ROWS; i++){
         for(int j = 0; j < NUM_COLUMNS; j++){
-            data = matrix[i*NUM_COLUMNS];
+            data = copiedCurrentMatrix[i*NUM_COLUMNS];
             if (data > THRESHOLD) {
                 sensorColor[i][j] = ofFloatColor(1.0, 0.0, 0.0);
             }else{
                 sensorColor[i][j] = ofFloatColor(1.0, 1.0, 1.0);
             }
 
-            sensorPosition[i][j].y = static_cast<float>(matrix[i*NUM_COLUMNS + j]) / 10.0;
+            sensorPosition[i][j].y = HEIGHT_ONSET - (static_cast<float>(copiedCurrentMatrix[i*NUM_COLUMNS + j]) / 5.0);
         }
     }
+
+    totalValueSlider = copiedFrameData.totalValue;
+    totalDeltaSlider = copiedFrameData.totalDelta;
+
     sensorVbo.updateColorData(&sensorColor[0][0], NUM_SENSORS);
     sensorVbo.updateVertexData(&sensorPosition[0][0], NUM_SENSORS);
 
@@ -131,15 +150,15 @@ void PckVisualizer::draw(){
 
     camera.end();
 
-    if (statusFlag) {
-        string statusString;
-        statusString += "Threshold: \n";
-        statusString += "Overall value: \n";
-        statusString += "Hand Position: \n";
-        statusString += "Duration since the last entrance: \n";
-        ofDrawBitmapString(statusString , 10, 20);
+    // if (statusFlag) {
+    //     string statusString;
+    //     statusString += "Threshold: \n";
+    //     statusString += "Overall value: \n";
+    //     statusString += "Hand Position: \n";
+    //     statusString += "Duration since the last entrance: \n";
+    //     ofDrawBitmapString(statusString , 10, 20);
 
-    }
+    // }
 
     dataPanel.draw();
 }

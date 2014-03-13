@@ -4,7 +4,11 @@
 #include "ofMain.h"
 #include "PckConst.h"
 #include "PckRecognizer.h"
+#include "PckFrameData.h"
 #include "ofxGui.h"
+#include <string>
+
+using namespace std;
 
 /**
  * @brief OepnGL-based visualizer class
@@ -14,6 +18,7 @@
 class PckVisualizer{
 
 private:
+    PckFrameData copiedFrameData;
 
     ofColor bgColor;
     ofColor gridColor;
@@ -37,16 +42,30 @@ private:
     void sensorSetup();
     void gridLineSetup();
     void thresholdPlaneSetup();
+    void dataPanelSetup();
 
     bool statusFlag;
     // gui
     ofxPanel dataPanel;
 
+    ofxIntSlider currentFrameSlider;
+    ofxIntSlider totalValueSlider;
+    ofxIntSlider totalDeltaSlider;
+
+    ofxIntSlider pointsOverThresholdSlider;
+    ofxLabel positionOfHandParameter;
+    ofxIntSlider gestureDurationParameter;
+
 public:
     PckVisualizer();
-    ~PckVisualizer();
 
     inline void setRecognizer(PckRecognizer *recog);
+    /**
+     * @brief copy the newest frameData for visualization
+     * @details This function is a critical session; it access the shared memory.
+     * @param char a pointer to the current matrx (not the pointer to the beginning of the matrix)
+     */
+    void copyCurrentFrameData(PckFrameData* frameDataPtr, int frameIndex);
     void update();
 
     void setup();
