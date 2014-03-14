@@ -12,6 +12,7 @@ protected:
     inline void calculateRowCentroids(unsigned char *matrix, float *centroids);
     inline void calculateColumnCentroids(unsigned char *matrix, float *centroids);
     inline void calculateAllCentroids(unsigned char *matrix, float *rowCentroids, float *columnCentroids);
+    inline float calculateAverage(float *array, int sizeOfArray);
 };
 
 float PckCentroid::calculateCentroid(unsigned char *array, int sizeOfArray){
@@ -49,6 +50,15 @@ void PckCentroid::calculateColumnCentroids(unsigned char *matrix, float *centroi
 void PckCentroid::calculateAllCentroids(unsigned char *matrix, float *rowCentroids, float *columnCentroids){
     calculateRowCentroids(matrix, rowCentroids);
     calculateColumnCentroids(matrix, columnCentroids);
+}
+
+float PckCentroid::calculateAverage(float *array, int sizeOfArray){
+
+    float sum = 0.0;
+    for(int i = 0; i< sizeOfArray; i++){
+        sum += array[i];
+    }
+    return sum / sizeOfArray;
 }
 
 #endif

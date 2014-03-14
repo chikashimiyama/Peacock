@@ -38,8 +38,6 @@ void PckReceiver::noiseGate(unsigned char *matrix){
 
 }
 
-
-
 int PckReceiver::matrixDelta(unsigned char* currentMatrix, unsigned char* previousMatrix){
     int delta = 0;
     for(int i = 0; i < NUM_SENSORS; i++){
@@ -71,7 +69,12 @@ void PckReceiver::threadedFunction(){
                     int delta = matrixDelta(buffer, preMatrix); // check the difference
                     float localRowCentroids[NUM_COLUMNS];
                     float localColumnCentroids[NUM_ROWS];
+                    float localRowCentroid, localColumnCentroid;
                     calculateAllCentroids(buffer, localRowCentroids, localColumnCentroids);
+
+                    localRowCentroid = calculateAverage(localRowCentroids, NUM_COLUMNS);
+                    localColumnCentroid = calculateAverage(localColumnCentroids, NUM_ROWS);
+
                     /****** CRITICAL SESSIONS ********/
                     lock();
                         Peacock* peacock = static_cast<Peacock*>(ofGetAppPtr());
@@ -92,6 +95,9 @@ void PckReceiver::threadedFunction(){
                         memcpy(static_cast<void*>(frameDataPtr->rowCentroids), static_cast<void*>(localRowCentroids), sizeof(float) * NUM_COLUMNS);
                         memcpy(static_cast<void*>(frameDataPtr->columnCentroids), static_cast<void*>(localColumnCentroids), sizeof(float) * NUM_ROWS);
                         // advance frame index by one
+                        frameDataPtr->rowCentroid = localRowCentroid;
+                        frameDataPtr->columnCentroid = localColumnCentroid;
+
                         peacock->setFrameIndex(nextFrameIndex);
                     unlock();
                     /****** CRITICAL SESSIONS ********/

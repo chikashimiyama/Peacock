@@ -20,6 +20,8 @@ struct PckFrameData {
 	
 	float rowCentroids[NUM_COLUMNS];
 	float columnCentroids[NUM_ROWS];
+	float rowCentroid;
+	float columnCentroid;
 };
 
 #endif

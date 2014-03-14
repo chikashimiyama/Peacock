@@ -33,8 +33,28 @@ void PckVisualizer::centroidSetup(){
     }
 
     rowCentroidVbo.setVertexData(&rowCentroidPosition[0], NUM_COLUMNS, GL_DYNAMIC_DRAW);
-    columnCentroidVbo.setVertexData(&columnCentroidPosition[0],NUM_ROWS, GL_DYNAMIC_DRAW);
+    columnCentroidVbo.setVertexData(&columnCentroidPosition[0], NUM_ROWS, GL_DYNAMIC_DRAW);
 
+    rowCentroidLine[0].x = (-MIDDLE_COLUMN - 0.25) * DISTANCE;
+    rowCentroidLine[0].y = HEIGHT_ONSET;
+    rowCentroidLine[0].z = 0.0;
+
+    rowCentroidLine[1].x = (MIDDLE_COLUMN + 0.25) * DISTANCE;
+    rowCentroidLine[1].y = HEIGHT_ONSET;
+    rowCentroidLine[1].z = 0.0;
+    
+    columnCentroidLine[0].x = 0.0;
+    columnCentroidLine[0].y = HEIGHT_ONSET;
+    columnCentroidLine[0].z = (-MIDDLE_ROW - 0.25) * DISTANCE;
+
+    columnCentroidLine[1].x = 0.0;
+    columnCentroidLine[1].y = HEIGHT_ONSET;
+    columnCentroidLine[1].z = (MIDDLE_ROW + 0.25) * DISTANCE;
+
+    rowCentroidLineVbo.setVertexData(&rowCentroidLine[0], 2, GL_DYNAMIC_DRAW);
+    columnCentroidLineVbo.setVertexData(&columnCentroidLine[0], 2, GL_DYNAMIC_DRAW);
+
+    centroidSphere.setRadius(1.0);
 }
 
 void PckVisualizer::sensorSetup(){
@@ -126,9 +146,6 @@ void PckVisualizer::dataPanelSetup(){
 
     dataPanel.add(columnCentroidSlider.setup("column centroid", 0.0, -3.0, 3.0));
     dataPanel.add(rowCentroidSlider.setup("row centroid", 0.0, -2.0, 2.0));
-
-
-
 }
 
 void PckVisualizer::copyCurrentFrameData(PckFrameData* frameDataPtr, int frameIndex){
@@ -157,22 +174,29 @@ void PckVisualizer::update(){
             sensorPosition[i][j][1].y = HEIGHT_ONSET - (static_cast<float>(copiedCurrentMatrix[i*NUM_COLUMNS + j]) * Y_SCALER);
         }
     }
+    //update centroids
     for(int i = 0;i < NUM_ROWS; i++){
        columnCentroidPosition[i].x = copiedFrameData.columnCentroids[i] * DISTANCE;
     }
     for(int i = 0;i < NUM_COLUMNS; i++){
        rowCentroidPosition[i].z = copiedFrameData.rowCentroids[i] * DISTANCE;
     }
-
-
+    // update centroid line
+    rowCentroidLine[0].z = rowCentroidLine[1].z = copiedFrameData.rowCentroid * DISTANCE;
+    columnCentroidLine[0].x = columnCentroidLine[1].x = copiedFrameData.columnCentroid * DISTANCE;
 
     totalValueSlider = copiedFrameData.totalValue;
     totalDeltaSlider = copiedFrameData.totalDelta;
 
     sensorVbo.updateColorData(&sensorColor[0][0][0], NUM_SENSORS*2);
     sensorVbo.updateVertexData(&sensorPosition[0][0][0], NUM_SENSORS*2);
-    columnCentroidVbo.updateVertexData(&columnCentroidPosition[0], NUM_ROWS);
+    
     rowCentroidVbo.updateVertexData(&rowCentroidPosition[0], NUM_COLUMNS);
+    columnCentroidVbo.updateVertexData(&columnCentroidPosition[0], NUM_ROWS);
+
+    rowCentroidLineVbo.updateVertexData(&rowCentroidLine[0], 2);
+    columnCentroidLineVbo.updateVertexData(&columnCentroidLine[0], 2);
+    
 
 }
 
@@ -193,9 +217,15 @@ void PckVisualizer::draw(){
     glPointSize(10.0);
     ofSetColor(rowCentroidColor);
     rowCentroidVbo.draw(GL_POINTS, 0, NUM_COLUMNS);
+    rowCentroidLineVbo.draw(GL_LINES, 0, 2);
+
     ofSetColor(columnCentroidColor);
     columnCentroidVbo.draw(GL_POINTS, 0, NUM_ROWS);
+    columnCentroidLineVbo.draw(GL_LINES, 0, 2);
 
+    centroidSphere.setPosition(copiedFrameData.columnCentroid * DISTANCE, HEIGHT_ONSET, copiedFrameData.rowCentroid * DISTANCE);
+    centroidSphere.draw();
+    
     camera.end();
 
     // if (statusFlag) {
