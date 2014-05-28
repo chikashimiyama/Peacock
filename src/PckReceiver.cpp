@@ -119,8 +119,7 @@ void PckReceiver::threadedFunction(){
                             index = 0;
                             break;
                         }case 0xFC:{
-                            ofLog() << "Button State:";
-                            ofLog() << buffer[1];
+                            ofLog() << "Button State:" << static_cast<int>(buffer[1]);
                             break;
                         }
 
