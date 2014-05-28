@@ -12,6 +12,15 @@ void PckReceiver::setup(){
         ofLog(OF_LOG_FATAL_ERROR) << "PckReceiver: no serial / CDC devices found. application abort...\n";
         OF_EXIT_APP(1);
     }
+    ofLog() << "PckReceiver: list of all available devices";
+    vector <ofSerialDeviceInfo>::iterator it = deviceList.begin();
+    while(it != deviceList.end()){
+        ofSerialDeviceInfo info = *it;
+        ofLog() << info.getDevicePath() << " " << info.getDeviceName() << " " <<info.getDeviceID();
+        it++;
+    }
+
+
     int baud = 9600;
     if(!serial.setup("/dev/ttyACM0",baud)){
         ofLog(OF_LOG_FATAL_ERROR) << "PckReceiver: could not initialize serial";
@@ -49,7 +58,7 @@ int PckReceiver::matrixDelta(unsigned char* currentMatrix, unsigned char* previo
 int PckReceiver::matrixTotal(unsigned char* matrix){
     int total = 0;    
     for(int i = 0; i < NUM_SENSORS; i++){
-        total += buffer[i];
+        total += matrix[i];
     }
     return total;
 }
@@ -58,66 +67,75 @@ void PckReceiver::threadedFunction(){
     ofLog() << "PckReceiver: thread started";
     while(isThreadRunning()){
 
-        unsigned char byte, type;
+        unsigned char byte;
         while(serial.available() > 0){ // if there is something in the buffer
             byte = serial.readByte();
             switch(byte){ 
                 case 0xFE:{
                     // end delimiter
-                    lowPassFilter(buffer, preMatrix);
-                    int total = matrixTotal(buffer); // check the total value
-                    int delta = matrixDelta(buffer, preMatrix); // check the difference
-                    float localRowCentroids[NUM_COLUMNS];
-                    float localColumnCentroids[NUM_ROWS];
-                    float localRowCentroid, localColumnCentroid;
-                    calculateAllCentroids(buffer, localRowCentroids, localColumnCentroids);
 
-                    localRowCentroid = calculateAverage(localRowCentroids, NUM_COLUMNS);
-                    localColumnCentroid = calculateAverage(localColumnCentroids, NUM_ROWS);
+                    switch(buffer[0]){
 
-                    /****** CRITICAL SESSIONS ********/
-                    lock();
-                        Peacock* peacock = static_cast<Peacock*>(ofGetAppPtr());
+                        case 0xFD:{
+                            //lowPassFilter(buffer, preMatrix);
+                            int total = matrixTotal(&buffer[1]); // check the total value
+                            int delta = matrixDelta(&buffer[1], preMatrix); // check the difference
+                            float localRowCentroids[NUM_COLUMNS];
+                            float localColumnCentroids[NUM_ROWS];
+                            float localRowCentroid, localColumnCentroid;
+                            calculateAllCentroids(&buffer[1], localRowCentroids, localColumnCentroids);
 
-                        // get next frame index
-                        int nextFrameIndex = (peacock->getFrameIndex() + 1) % NUM_FRAMES;
+                            localRowCentroid = calculateAverage(localRowCentroids, NUM_COLUMNS);
+                            localColumnCentroid = calculateAverage(localColumnCentroids, NUM_ROWS);
 
-                        // get a pointer to the frame x in frameData array 
-                        PckFrameData* frameDataPtr = peacock->getFrameData(nextFrameIndex);
-                        // get a pointer to the matrix in the frameData
-                        unsigned char* matrixPtr = frameDataPtr->matrix; 
-                        // copy the data in buffer to the matrix in the shared resource
-                        memcpy(static_cast<void*>(matrixPtr), static_cast<void*>(buffer), NUM_SENSORS);
-                        // set the precalculated total and delta buffer in the shared resource
-                        frameDataPtr->totalValue = total; 
-                        frameDataPtr->totalDelta = delta;
-                        // copy data of centroids
-                        memcpy(static_cast<void*>(frameDataPtr->rowCentroids), static_cast<void*>(localRowCentroids), sizeof(float) * NUM_COLUMNS);
-                        memcpy(static_cast<void*>(frameDataPtr->columnCentroids), static_cast<void*>(localColumnCentroids), sizeof(float) * NUM_ROWS);
-                        // advance frame index by one
-                        frameDataPtr->rowCentroid = localRowCentroid;
-                        frameDataPtr->columnCentroid = localColumnCentroid;
+                            /****** CRITICAL SESSIONS ********/
+                            lock();
+                                Peacock* peacock = static_cast<Peacock*>(ofGetAppPtr());
 
-                        peacock->setFrameIndex(nextFrameIndex);
-                    unlock();
-                    /****** CRITICAL SESSIONS ********/
+                                // get next frame index
+                                int nextFrameIndex = (peacock->getFrameIndex() + 1) % NUM_FRAMES;
 
-                    memcpy(static_cast<void*>(preMatrix), static_cast<void*>(buffer), NUM_SENSORS);
-                    index = 0;
-                    break;
-                }
-                case 0xFF:{
-                    // start delimiter
-                    index = 0;  // ensure that buffer is empty
-                    break;
-                }
-                case 0xFD:{
-                    type = 0;
-                    break;
-                }
-                default:{
-                    buffer[index] = byte;
-                    index++;
+                                // get a pointer to the frame x in frameData array 
+                                PckFrameData* frameDataPtr = peacock->getFrameData(nextFrameIndex);
+                                // get a pointer to the matrix in the frameData
+                                unsigned char* matrixPtr = frameDataPtr->matrix; 
+                                // copy the data in buffer to the matrix in the shared resource
+                                memcpy(static_cast<void*>(matrixPtr), static_cast<void*>(&buffer[1]), NUM_SENSORS);
+                                // set the precalculated total and buffer in the shared resource
+                                frameDataPtr->totalValue = total; 
+                                frameDataPtr->totalDelta = delta;
+                                // copy data of centroids
+                                memcpy(static_cast<void*>(frameDataPtr->rowCentroids), static_cast<void*>(localRowCentroids), sizeof(float) * NUM_COLUMNS);
+                                memcpy(static_cast<void*>(frameDataPtr->columnCentroids), static_cast<void*>(localColumnCentroids), sizeof(float) * NUM_ROWS);
+                                // advance frame index by one
+                                frameDataPtr->rowCentroid = localRowCentroid;
+                                frameDataPtr->columnCentroid = localColumnCentroid;
+
+                                peacock->setFrameIndex(nextFrameIndex);
+                            unlock();
+                            /****** CRITICAL SESSIONS ********/
+
+                            memcpy(static_cast<void*>(preMatrix), static_cast<void*>(&buffer[1]), NUM_SENSORS);
+                            index = 0;
+                            break;
+                        }case 0xFC:{
+                            ofLog() << "Button State:";
+                            ofLog() << buffer[1];
+                            break;
+                        }
+
+                        break;
+                    }
+                    case 0xFF:{
+                        // start delimiter
+                        index = 0;  // ensure that buffer is empty
+                        break;
+                    }
+
+                    default:{
+                        buffer[index] = byte;
+                        index++;
+                    }
                 }
             }
         }
