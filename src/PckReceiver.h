@@ -18,7 +18,7 @@ class PckReceiver: public ofThread, public PckCentroid{
 
 private:
     unsigned char buffer[128];
-    unsigned char preMatrix[35];
+    unsigned char preMatrix[40];
     unsigned char index;
     PckSerial serial;
 
