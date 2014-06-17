@@ -127,8 +127,6 @@ void PckReceiver::threadedFunction(){
                     case 0xFF:{
                         // start delimiter
                         index = 0;  // ensure that buffer is empty  
-                                     ofLog() << "test";
-
                         break;
                     }
 
