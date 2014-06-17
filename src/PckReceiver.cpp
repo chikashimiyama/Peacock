@@ -73,7 +73,6 @@ void PckReceiver::threadedFunction(){
             switch(byte){ 
                 case 0xFE:{
                     // end delimiter
-
                     switch(buffer[0]){
 
                         case 0xFD:{
@@ -116,7 +115,7 @@ void PckReceiver::threadedFunction(){
                             /****** CRITICAL SESSIONS ********/
 
                             memcpy(static_cast<void*>(preMatrix), static_cast<void*>(&buffer[1]), NUM_SENSORS);
-                            index = 0;
+                            index = 0; 
                             break;
                         }case 0xFC:{
                             ofLog() << "Button State:" << static_cast<int>(buffer[1]);
@@ -127,7 +126,9 @@ void PckReceiver::threadedFunction(){
                     }
                     case 0xFF:{
                         // start delimiter
-                        index = 0;  // ensure that buffer is empty
+                        index = 0;  // ensure that buffer is empty  
+                                     ofLog() << "test";
+
                         break;
                     }
 
